@@ -164,6 +164,8 @@ app.get('/auth', function (req, res) {
           }
         }
       });
+    }else{
+      console.log(err);
     }
   });
 });

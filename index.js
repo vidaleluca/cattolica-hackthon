@@ -143,6 +143,11 @@ function sendNotification(message,callback){
   var params = {
       app_id: 'f95c5a82-2a74-40d2-9f77-47177bf782f8',
       included_segments:["All"],
+      headings: {
+          "en": "English Title",
+          "es": "Spanish Title",
+          "it": "Italian title"
+        },
       contents: {
           'en': 'Notification body',
           'es': 'Cuerpo de la notificación',

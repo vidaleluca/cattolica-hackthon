@@ -104,6 +104,7 @@ app.get('/auth/:token/:refresh_token', function (req, res) {
           //console.log("MESSAGE=> "+JSON.stringify(messageResponse));
           var result = urlDecoder.decode(messageResponse.raw);
           console.log(result);
+          res.json({result:"success"});
           // var mR = JSON.stringify(messageResponse.payload.body);
           // var bodyString = new Buffer(mR.data, 'base64').toString("ascii");
           // console.log("BODY=> "+bodyString);

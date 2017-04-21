@@ -60,6 +60,9 @@ app.get('/oauth2callback', function (req, res) {
 app.get('/auth/:token/:refresh_token', function (req, res) {
   var accessToken = req.query.token;
   var refreshToken = req.query.refresh_token;
+  console.log('at => '+accessToken);
+  console.log('rt => '+refreshToken);
+
   var credentials = {
       access_token: accessToken,
       refresh_token: refreshToken

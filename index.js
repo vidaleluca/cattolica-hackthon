@@ -107,15 +107,14 @@ app.get('/auth', function (req, res) {
   var refreshToken = req.query.refresh_token;
   // console.log('at => '+accessToken);
   // console.log('rt => '+refreshToken);
-
   // var accessToken = req.params.token;
   // var refreshToken = req.params.refresh_token;
   console.log('at => '+accessToken);
   console.log('rt => '+refreshToken);
-
   var credentials = {
       access_token: accessToken,
-      refresh_token: refreshToken
+      token_type: "Bearer",
+      expiry_date: refreshToken
   };
   oauth2Client.setCredentials(credentials);
   var gmail = google.gmail('v1');

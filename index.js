@@ -8,7 +8,7 @@ var urlDecoder = require('base64-url');
 
 var YOUR_CLIENT_ID = "114086584296-3um4j3ne41m27qtcqg4bupc10lqnk1mn.apps.googleusercontent.com";
 var YOUR_CLIENT_SECRET = "NFXIFTuqMS74Crid-CiiD9N_";
-var YOUR_REDIRECT_URL = "http://localhost:5000/oauth2callback";
+var YOUR_REDIRECT_URL = "http://cattolica.crispybacon.us:5000/oauth2callback";
 
 
 // var oauth2Client = new OAuth2(

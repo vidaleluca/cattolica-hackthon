@@ -51,7 +51,7 @@ app.get('/oauth2callback', function (req, res) {
     console.log("TOKENS=> "+tokens);
     // Now tokens contains an access_token and an optional refresh_token. Save them.
     if (!err) {
-      console.log('tokens=>  '+ tokens);
+      console.log('tokens=>  '+ JSON.stringify(tokens));
       oauth2Client.setCredentials(tokens);
       res.end(JSON.stringify(tokens));
     }

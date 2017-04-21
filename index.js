@@ -51,11 +51,56 @@ app.get('/oauth2callback', function (req, res) {
     console.log("TOKENS=> "+tokens);
     // Now tokens contains an access_token and an optional refresh_token. Save them.
     if (!err) {
+      console.log('tokens=>  '+JSON.parse(tokens));
       oauth2Client.setCredentials(tokens);
       res.end(JSON.stringify(tokens));
     }
   });
 });
+
+
+app.get('/auth/10', function(req,res){
+  var gmail = google.gmail('v1');
+  gmail.users.messages.list({
+    auth: oauth2Client,
+    userId: 'me',
+    maxResults: 1
+  }, function(err, response) {
+    if (err) {
+      console.log('The API returned an error: ' + err);
+      res.json({result:"error", data:err});
+    }
+    console.log("RESPONSE => " + JSON.stringify(response));
+    var messages = response.messages;
+    if (messages.length == 0) {
+      console.log('No messages found.');
+    } else {
+      console.log('Messages:');
+      for (var i = 0; i < messages.length; i++) {
+        var message = messages[i];
+        console.log('- %s', message.id);
+        var message = messages[i];
+        gmail.users.messages.get({
+          auth: oauth2Client,
+          userId: 'me',
+          id: message.id,
+          format: "raw"
+        }, function(err, messageResponse) {
+          console.log("SNIPPET=> "+JSON.stringify(messageResponse.snippet));
+          console.log("LabelsIDs=> "+JSON.stringify(messageResponse.labelIds));
+          //console.log("MESSAGE=> "+JSON.stringify(messageResponse));
+          var result = urlDecoder.decode(messageResponse.raw);
+          console.log(result);
+          res.json({result:"success"});
+          // var mR = JSON.stringify(messageResponse.payload.body);
+          // var bodyString = new Buffer(mR.data, 'base64').toString("ascii");
+          // console.log("BODY=> "+bodyString);
+        });
+      }
+    }
+  });
+});
+
 
 app.get('/auth', function (req, res) {
   var accessToken = req.query.token;

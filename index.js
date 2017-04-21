@@ -155,7 +155,7 @@ function sendNotification(message,callback){
         callback(response);
     	} else {
       	console.log(response);
-        callback(response);
+        callback("");
     	}
   });
 }

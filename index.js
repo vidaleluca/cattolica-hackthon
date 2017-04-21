@@ -8,7 +8,7 @@ var urlDecoder = require('base64-url');
 
 var YOUR_CLIENT_ID = "114086584296-3um4j3ne41m27qtcqg4bupc10lqnk1mn.apps.googleusercontent.com";
 // var YOUR_CLIENT_ID = "114086584296-pba7bjk6cdh8gn1dqrn4ojj0dvhb99o9";
-// var YOUR_CLIENT_SECRET = "NFXIFTuqMS74Crid-CiiD9N_";
+var YOUR_CLIENT_SECRET = "NFXIFTuqMS74Crid-CiiD9N_";
 // var YOUR_CLIENT_SECRET = "";
 var YOUR_REDIRECT_URL = "http://cattolica.crispybacon.us:5000/oauth2callback";
 
@@ -119,7 +119,6 @@ app.get('/auth', function (req, res) {
   //     expiry_date: refreshToken
   // };
   var code = req.query.code;
-
   oauth2Client.getToken(req.query.code, function (err, tokens) {
     console.log("TOKENS=> "+tokens);
     // Now tokens contains an access_token and an optional refresh_token. Save them.

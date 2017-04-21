@@ -1,0 +1,22 @@
+{
+  "name": "cattolica-hackathon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "pm2 start index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vidaleluca/cattolica-hackthon.git"
+  },
+  "keywords": [
+    "cattolica"
+  ],
+  "author": "Luca Vidale",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vidaleluca/cattolica-hackthon/issues"
+  },
+  "homepage": "https://github.com/vidaleluca/cattolica-hackthon#readme"
+}

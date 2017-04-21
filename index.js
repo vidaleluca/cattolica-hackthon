@@ -57,7 +57,14 @@ app.get('/oauth2callback', function (req, res) {
   });
 });
 
-app.get('/read/10', function (req, res) {
+app.get('/auth/:token/:refresh_token', function (req, res) {
+  var accessToken = req.query.token;
+  var refreshToken = req.query.refresh_token;
+  var credentials = {
+      access_token: accessToken,
+      refresh_token: refreshToken
+  };
+  oauth2Client.setCredentials(credentials);
   var gmail = google.gmail('v1');
   gmail.users.messages.list({
     auth: oauth2Client,

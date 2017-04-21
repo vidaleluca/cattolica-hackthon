@@ -7,7 +7,9 @@ var auth = new googleAuth();
 var urlDecoder = require('base64-url');
 
 var YOUR_CLIENT_ID = "114086584296-3um4j3ne41m27qtcqg4bupc10lqnk1mn.apps.googleusercontent.com";
-var YOUR_CLIENT_SECRET = "NFXIFTuqMS74Crid-CiiD9N_";
+// var YOUR_CLIENT_ID = "114086584296-pba7bjk6cdh8gn1dqrn4ojj0dvhb99o9";
+// var YOUR_CLIENT_SECRET = "NFXIFTuqMS74Crid-CiiD9N_";
+// var YOUR_CLIENT_SECRET = "";
 var YOUR_REDIRECT_URL = "http://cattolica.crispybacon.us:5000/oauth2callback";
 
 
@@ -103,57 +105,66 @@ app.get('/auth/10', function(req,res){
 
 
 app.get('/auth', function (req, res) {
-  var accessToken = req.query.token;
-  var refreshToken = req.query.refresh_token;
+  // var accessToken = req.query.token;
+  // var refreshToken = req.query.refresh_token;
   // console.log('at => '+accessToken);
   // console.log('rt => '+refreshToken);
   // var accessToken = req.params.token;
   // var refreshToken = req.params.refresh_token;
-  console.log('at => '+accessToken);
-  console.log('rt => '+refreshToken);
-  var credentials = {
-      access_token: accessToken,
-      token_type: "Bearer",
-      expiry_date: refreshToken
-  };
-  oauth2Client.setCredentials(credentials);
-  var gmail = google.gmail('v1');
-  gmail.users.messages.list({
-    auth: oauth2Client,
-    userId: 'me',
-    maxResults: 1
-  }, function(err, response) {
-    if (err) {
-      console.log('The API returned an error: ' + err);
-      res.json({result:"error", data:err});
-    }
-    console.log("RESPONSE => " + JSON.stringify(response));
-    var messages = response.messages;
-    if (messages.length == 0) {
-      console.log('No messages found.');
-    } else {
-      console.log('Messages:');
-      for (var i = 0; i < messages.length; i++) {
-        var message = messages[i];
-        console.log('- %s', message.id);
-        var message = messages[i];
-        gmail.users.messages.get({
-          auth: oauth2Client,
-          userId: 'me',
-          id: message.id,
-          format: "raw"
-        }, function(err, messageResponse) {
-          console.log("SNIPPET=> "+JSON.stringify(messageResponse.snippet));
-          console.log("LabelsIDs=> "+JSON.stringify(messageResponse.labelIds));
-          //console.log("MESSAGE=> "+JSON.stringify(messageResponse));
-          var result = urlDecoder.decode(messageResponse.raw);
-          console.log(result);
-          res.json({result:"success"});
-          // var mR = JSON.stringify(messageResponse.payload.body);
-          // var bodyString = new Buffer(mR.data, 'base64').toString("ascii");
-          // console.log("BODY=> "+bodyString);
-        });
-      }
+  // console.log('at => '+accessToken);
+  // console.log('rt => '+refreshToken);
+  // var credentials = {
+  //     access_token: accessToken,
+  //     token_type: "Bearer",
+  //     expiry_date: refreshToken
+  // };
+  var code = req.query.code;
+
+  oauth2Client.getToken(req.query.code, function (err, tokens) {
+    console.log("TOKENS=> "+tokens);
+    // Now tokens contains an access_token and an optional refresh_token. Save them.
+    if (!err) {
+      console.log('tokens=>  '+ JSON.stringify(tokens));
+      oauth2Client.setCredentials(tokens);
+      var gmail = google.gmail('v1');
+      gmail.users.messages.list({
+        auth: oauth2Client,
+        userId: 'me',
+        maxResults: 1
+      }, function(err, response) {
+        if (err) {
+          console.log('The API returned an error: ' + err);
+          res.json({result:"error", data:err});
+        }
+        console.log("RESPONSE => " + JSON.stringify(response));
+        var messages = response.messages;
+        if (messages.length == 0) {
+          console.log('No messages found.');
+        } else {
+          console.log('Messages:');
+          for (var i = 0; i < messages.length; i++) {
+            var message = messages[i];
+            console.log('- %s', message.id);
+            var message = messages[i];
+            gmail.users.messages.get({
+              auth: oauth2Client,
+              userId: 'me',
+              id: message.id,
+              format: "raw"
+            }, function(err, messageResponse) {
+              console.log("SNIPPET=> "+JSON.stringify(messageResponse.snippet));
+              console.log("LabelsIDs=> "+JSON.stringify(messageResponse.labelIds));
+              //console.log("MESSAGE=> "+JSON.stringify(messageResponse));
+              var result = urlDecoder.decode(messageResponse.raw);
+              console.log(result);
+              res.json({result:"success"});
+              // var mR = JSON.stringify(messageResponse.payload.body);
+              // var bodyString = new Buffer(mR.data, 'base64').toString("ascii");
+              // console.log("BODY=> "+bodyString);
+            });
+          }
+        }
+      });
     }
   });
 });

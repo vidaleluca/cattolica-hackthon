@@ -7,18 +7,8 @@ var auth = new googleAuth();
 var urlDecoder = require('base64-url');
 
 var YOUR_CLIENT_ID = "114086584296-3um4j3ne41m27qtcqg4bupc10lqnk1mn.apps.googleusercontent.com";
-// var YOUR_CLIENT_ID = "114086584296-pba7bjk6cdh8gn1dqrn4ojj0dvhb99o9";
 var YOUR_CLIENT_SECRET = "NFXIFTuqMS74Crid-CiiD9N_";
-// var YOUR_CLIENT_SECRET = "";
 var YOUR_REDIRECT_URL = "http://cattolica.crispybacon.us:5000/oauth2callback";
-
-
-// var oauth2Client = new OAuth2(
-//   YOUR_CLIENT_ID,
-//   YOUR_CLIENT_SECRET,
-//   YOUR_REDIRECT_URL
-// );
-
 var oauth2Client = new auth.OAuth2(YOUR_CLIENT_ID, YOUR_CLIENT_SECRET, YOUR_REDIRECT_URL);
 
 // generate a url that asks permissions for Google+ and Google Calendar scopes
@@ -28,30 +18,21 @@ var scopes = [
 ];
 
 var url = oauth2Client.generateAuthUrl({
-  // 'online' (default) or 'offline' (gets refresh_token)
   access_type: 'offline',
-  // If you only need one scope you can pass it as a string
   scope: scopes,
-  // Optional property that passes state parameters to redirect URI
-  // state: { foo: 'bar' }
 });
 
 app.get('/', function (req, res) {
-  //res.send('hey cattolica guys');
   console.log(url);
-  // res.redirect(url);
-  // res.end();
   res.statusCode = 302;
   res.setHeader("Location", url);
   res.end();
 });
 
-
 app.get('/oauth2callback', function (req, res) {
   console.log("CODE=> "+ req.query.code);
   oauth2Client.getToken(req.query.code, function (err, tokens) {
     console.log("TOKENS=> "+tokens);
-    // Now tokens contains an access_token and an optional refresh_token. Save them.
     if (!err) {
       console.log('tokens=>  '+ JSON.stringify(tokens));
       oauth2Client.setCredentials(tokens);
@@ -59,7 +40,6 @@ app.get('/oauth2callback', function (req, res) {
     }
   });
 });
-
 
 app.get('/auth/10', function(req,res){
   var gmail = google.gmail('v1');
@@ -94,34 +74,16 @@ app.get('/auth/10', function(req,res){
           var result = urlDecoder.decode(messageResponse.raw);
           console.log(result);
           res.json({result:"success"});
-          // var mR = JSON.stringify(messageResponse.payload.body);
-          // var bodyString = new Buffer(mR.data, 'base64').toString("ascii");
-          // console.log("BODY=> "+bodyString);
         });
       }
     }
   });
 });
 
-
 app.get('/auth', function (req, res) {
-  // var accessToken = req.query.token;
-  // var refreshToken = req.query.refresh_token;
-  // console.log('at => '+accessToken);
-  // console.log('rt => '+refreshToken);
-  // var accessToken = req.params.token;
-  // var refreshToken = req.params.refresh_token;
-  // console.log('at => '+accessToken);
-  // console.log('rt => '+refreshToken);
-  // var credentials = {
-  //     access_token: accessToken,
-  //     token_type: "Bearer",
-  //     expiry_date: refreshToken
-  // };
   var code = req.query.code;
   oauth2Client.getToken(req.query.code, function (err, tokens) {
     console.log("TOKENS=> "+tokens);
-    // Now tokens contains an access_token and an optional refresh_token. Save them.
     if (!err) {
       console.log('tokens=>  '+ JSON.stringify(tokens));
       oauth2Client.setCredentials(tokens);
@@ -157,9 +119,6 @@ app.get('/auth', function (req, res) {
               var result = urlDecoder.decode(messageResponse.raw);
               console.log(result);
               res.json({result:"success"});
-              // var mR = JSON.stringify(messageResponse.payload.body);
-              // var bodyString = new Buffer(mR.data, 'base64').toString("ascii");
-              // console.log("BODY=> "+bodyString);
             });
           }
         }
@@ -169,6 +128,37 @@ app.get('/auth', function (req, res) {
     }
   });
 });
+
+var onesignal = require('node-opensignal-api');
+var onesignal_client = onesignal.createClient();
+var restApiKey = 'Y2U0Mjg5YmEtY2U5NC00NzQyLTgzNWUtOWNjOTY0OWFhOGE4';
+
+app.get("/send",function(req,res){
+  sendNotification("",function(response){
+    res.end(response);
+  });
+});
+
+function sendNotification(message,callback){
+  var params = {
+      app_id: 'f95c5a82-2a74-40d2-9f77-47177bf782f8',
+      included_segments:["All"],
+      contents: {
+          'en': 'Notification body',
+          'es': 'Cuerpo de la notificación',
+          'it': 'Corpo della notifica'
+      }
+  };
+  onesignal_client.notifications.create(restApiKey, params, function (err, response) {
+      if (err) {
+      	console.log('Encountered error', err);
+        callback(response);
+    	} else {
+      	console.log(response);
+        callback(response);
+    	}
+  });
+}
 
 app.listen(5000, function () {
 

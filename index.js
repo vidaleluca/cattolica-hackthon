@@ -81,7 +81,7 @@ app.get('/auth', function (req, res) {
   }, function(err, response) {
     if (err) {
       console.log('The API returned an error: ' + err);
-      return;
+      res.json({result:"error", data:err});
     }
     console.log("RESPONSE => " + JSON.stringify(response));
     var messages = response.messages;
@@ -104,7 +104,7 @@ app.get('/auth', function (req, res) {
           //console.log("MESSAGE=> "+JSON.stringify(messageResponse));
           var result = urlDecoder.decode(messageResponse.raw);
           console.log(result);
-          res.end();
+          res.json({result:"success"});
           // var mR = JSON.stringify(messageResponse.payload.body);
           // var bodyString = new Buffer(mR.data, 'base64').toString("ascii");
           // console.log("BODY=> "+bodyString);

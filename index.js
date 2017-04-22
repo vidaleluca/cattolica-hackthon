@@ -132,14 +132,10 @@ function sendNotification(title,message,callback){
       app_id: 'f95c5a82-2a74-40d2-9f77-47177bf782f8',
       included_segments:["All"],
       headings: {
-          "en": "No Sbatty - contro il furto",
-          "es": "No Sbatty - contro il furto",
-          "it": "No Sbatty - contro il furto"
-        },
+          "en": "No Sbatty - contro il furto"
+      },
       contents: {
-          'en': 'Dalle tue email ho visto che dopodomani sarai a Parigi, perchè non ti assicuri contro il furto del tuo nuovo PC? Sai di questi tempi non si sa mai.',
-          'es': 'Dalle tue email ho visto che dopodomani sarai a Parigi, perchè non ti assicuri contro il furto del tuo nuovo PC? Sai di questi tempi non si sa mai.',
-          'it': 'Dalle tue email ho visto che dopodomani sarai a Parigi, perchè non ti assicuri contro il furto del tuo nuovo PC? Sai di questi tempi non si sa mai.'
+          'en': 'Dalle tue email ho visto che dopodomani sarai a Parigi, perchè non ti assicuri contro il furto del tuo nuovo PC? Sai di questi tempi non si sa mai.'
       }
   };
   onesignal_client.notifications.create(restApiKey, params, function (err, response) {
